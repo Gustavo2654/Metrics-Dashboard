@@ -9,6 +9,16 @@ builder.Services.AddScoped<MetricsService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+            builder =>
+            {
+                builder.WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+            });
+        });
 builder.Services.AddDbContext<DbContexto>(options =>
     options.UseSqlite("Data Source=sales.db"));
 
@@ -39,4 +49,5 @@ using (var scope = app.Services.CreateScope())
 
 app.UseAuthorization();
 app.MapControllers();
+app.UseCors("AllowFrontend");
 app.Run();
